@@ -10,6 +10,7 @@ public class boardVO {
 	private String content=null;
 	private String indate=null;
 	private String chkbox=null;
+	
 	public int getNum() {
 		return num;
 	}

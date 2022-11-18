@@ -40,8 +40,6 @@
          		out.print("<td>"+bvo.getIndate()+"</td>");
          		out.print("</tr>");
          	}
-         	
-         
          %>
 
       </table>

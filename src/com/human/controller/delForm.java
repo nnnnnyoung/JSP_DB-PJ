@@ -14,14 +14,14 @@ import com.human.DAO.boardDAO;
 /**
  * Servlet implementation class wrForm
  */
-@WebServlet("/wrForm")
-public class wrForm extends HttpServlet {
+@WebServlet("/delForm")
+public class delForm extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private boardDAO bdao=new boardDAO() ;
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public wrForm() {
+    public delForm() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -32,12 +32,10 @@ public class wrForm extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		//response.getWriter().append("Served at: ").append(request.getContextPath());
-		int num=bdao.wrnum();
-		System.out.println(num);
-		String url="bbs/wrForm.jsp";
-		RequestDispatcher dispacher= request.getRequestDispatcher(url);
-		request.setAttribute("num", num);
-		dispacher.forward(request, response);
+		int del=Integer.parseInt(request.getParameter("del"));
+		System.out.println(del+"fdnjgls");
+		bdao.del(del);
+		response.sendRedirect("boardList");
 	}
 
 	/**

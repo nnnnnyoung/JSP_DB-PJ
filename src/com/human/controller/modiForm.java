@@ -10,11 +10,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.human.DAO.boardDAO;
+import com.human.VO.boardVO;
 
 /**
  * Servlet implementation class wrForm
  */
-@WebServlet("/wrForm")
+@WebServlet("/modiForm")
 public class modiForm extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private boardDAO bdao=new boardDAO() ;
@@ -32,11 +33,14 @@ public class modiForm extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		//response.getWriter().append("Served at: ").append(request.getContextPath());
-		int num=bdao.wrnum();
-		System.out.println(num+"확인");
-		String url="bbs/wrForm.jsp";
+		int modi=Integer.parseInt(request.getParameter("modi"));
+		System.out.println(modi+"ndskhjahjkfd");
+		
+		boardVO bvo=bdao.modiform(modi);
+		System.out.println(bvo.getId());
+		String url="bbs/modiForm.jsp";
 		RequestDispatcher dispacher= request.getRequestDispatcher(url);
-		request.setAttribute("num", num);
+		request.setAttribute("modi", bvo);
 		dispacher.forward(request, response);
 	}
 

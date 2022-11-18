@@ -8,6 +8,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import org.apache.tomcat.util.digester.SystemPropertySource;
+
 import com.human.VO.boardVO;
 import com.sun.corba.se.spi.orbutil.fsm.Guard.Result;
 
@@ -15,19 +17,19 @@ public class boardDAO {
 	Connection conn=null;
 	
 	public boardDAO(){
-		//1. ë“œë¼ì´ë²„ ë¡œë“œ(í•œë²ˆë§Œ) 2. ì»¤ë„¥ì…˜ 3.ì¿¼ë¦¬ì „ì†¡ 4.ë¦¬í„´ê°’ ì²˜ë¦¬
+		//1. µå¶óÀÌ¹ö ·Îµå(ÇÑ¹ø¸¸) 2. Ä¿³Ø¼Ç 3.Äõ¸®Àü¼Û 4.¸®ÅÏ°ª Ã³¸®
 		try {
 			Class.forName("oracle.jdbc.driver.OracleDriver");
-			System.out.println("ë¡œë“œì„±ê³µ");
+			System.out.println("·Îµå¼º°ø");
 		} catch(Exception e) {
-			System.out.println("ë¡œë“œì‹¤íŒ¨");
+			System.out.println("·Îµå½ÇÆĞ");
 		}
 		
 	}
 	
 	public boolean connect() { // 
 		try {
-			// ì»¤ë„¥ì…˜ì„ ì‹œë„í•˜ê³  ê·¸ ê²°ê³¼ë¥¼ ì–»ì–´ ì˜¤ëŠ” ì½”ë“œ... 
+			// Ä¿³Ø¼ÇÀ» ½ÃµµÇÏ°í ±× °á°ú¸¦ ¾ò¾î ¿À´Â ÄÚµå... 
 			conn =  DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:orcl", "system", "11111111");
 			return true;
 		} catch (Exception e) {
@@ -90,23 +92,25 @@ public class boardDAO {
 		return num;
 	}
 	
-	public void insert(boardVO boardvo) { //ì‘ì„±í•œ ê²Œì‹œê¸€ì„ DBì— ì €ì¥
+	public void insert(boardVO boardvo) { //ÀÛ¼ºÇÑ °Ô½Ã±ÛÀ» DB¿¡ ÀúÀå
 		if(connect()) {
-			String sql="insert into qa values (qa_cnt.nextval,?,?,?,?,?,default,?)";
+			String sql="insert into qa values (?,?,?,?,?,?,default,?)";
 			try {
 				PreparedStatement psmt=conn.prepareStatement(sql);
-				psmt.setString(1, boardvo.getId());
-				psmt.setString(2, boardvo.getName());
-				psmt.setString(3, boardvo.getPass());
-				psmt.setString(4, boardvo.getTitle());
-				psmt.setString(5, boardvo.getContent());
-				psmt.setString(6, boardvo.getChkbox());
+				System.out.println(boardvo.getNum());
+				psmt.setInt(1, boardvo.getNum());
+				psmt.setString(2, boardvo.getId());
+				psmt.setString(3, boardvo.getName());
+				psmt.setString(4, boardvo.getPass());
+				psmt.setString(5, boardvo.getTitle());
+				psmt.setString(6, boardvo.getContent());
+				psmt.setString(7, boardvo.getChkbox());
 				int r=psmt.executeUpdate();
-				System.out.println("ì…ë ¥ ì„±ê³µ");
+				System.out.println("ÀÔ·Â ¼º°ø");
 				conn.close();
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
-				System.out.println("ì…ë ¥ ì‹¤íŒ¨");
+				System.out.println("ÀÔ·Â ½ÇÆĞ");
 			}
 		}
 	}
@@ -119,9 +123,9 @@ public class boardDAO {
 			try {
 				Statement st =conn.createStatement();
 				rs=st.executeQuery(sql);
-				
 				if(rs.next()) {
 					boardVO bvo=new boardVO();
+					bvo.setNum(rs.getInt("num"));
 					bvo.setName(rs.getString("name"));
 					bvo.setChkbox(rs.getString("chkbox"));
 					bvo.setIndate(rs.getString("indate"));
@@ -137,6 +141,134 @@ public class boardDAO {
 		}
 		return null;
 	}
-	
+
+	public ArrayList<boardVO> selectC(String wno) {
+		// TODO Auto-generated method stub
+		ArrayList<boardVO> clist=new ArrayList<>();
+		ResultSet rs=null;
+		if(connect()) {
+			String sql="select * from comm where num=?";
+			try {
+				PreparedStatement psmt =conn.prepareStatement(sql);
+				psmt.setInt(1, Integer.parseInt(wno));
+				rs=psmt.executeQuery();
+				while(rs.next()) {
+					boardVO bvo=new boardVO();
+					bvo.setId(rs.getString("id"));
+					bvo.setName(rs.getString("name"));
+					bvo.setContent(rs.getString("content"));
+					bvo.setIndate(rs.getString("indate"));
+					clist.add(bvo);
+				}
+				conn.close();
+				return clist;
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
+		
+		
+		
+		return null;
+	}
+
+	public void comIn(boardVO bvo) {
+		if(connect()) {
+			String sql="insert into comm values(?,?,?,?,default)";
+			try {
+				PreparedStatement pt=conn.prepareStatement(sql);
+				pt.setInt(1, bvo.getNum());
+				pt.setString(2, bvo.getId());
+				pt.setString(3, bvo.getName());
+				pt.setString(4, bvo.getContent());
+				int r=pt.executeUpdate();
+				conn.close();
+				
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
+		
+	}
+
+	public void del(int del) {
+		// TODO Auto-generated method stub
+		if(connect()) {
+			String sql="delete from qa where num=?";
+			try {
+				PreparedStatement pt=conn.prepareStatement(sql);
+				pt.setInt(1, del);
+				int r=pt.executeUpdate();
+				conn.close();
+				
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
+		
+	}
+
+	public boardVO modiform(int modi) {
+		// TODO Auto-generated method stub
+		ResultSet rs=null;
+		if(connect()) {
+			String sql="select * from qa where num=?";
+			try {
+				PreparedStatement pt=conn.prepareStatement(sql);
+				pt.setInt(1, modi);
+				rs=pt.executeQuery();
+				if(rs.next()) {
+					boardVO bvo=new boardVO();
+					bvo.setNum(rs.getInt("num"));
+					bvo.setId(rs.getString("id"));
+					bvo.setPass(rs.getString("pass"));
+					bvo.setName(rs.getString("name"));
+					bvo.setTitle(rs.getString("title"));
+					bvo.setContent(rs.getString("content"));
+					
+					return bvo;
+				}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
+		return null;
+	}
+
+	public void update(boardVO boardvo) {
+		// TODO Auto-generated method stub
+		if(connect()) {
+			String sql="update qa set id=?,name=?,pass=?,title=?,content=?,chkbox=? where num =?";
+			try {
+				PreparedStatement pt=conn.prepareStatement(sql);
+				pt.setString(1, boardvo.getId());
+				pt.setString(2, boardvo.getName());
+				pt.setString(3, boardvo.getPass());
+				pt.setString(4, boardvo.getTitle());
+				pt.setString(5, boardvo.getContent());
+				pt.setString(6, boardvo.getChkbox());
+				pt.setInt(7, boardvo.getNum());
+				int r=pt.executeUpdate();
+				System.out.println(r);
+				conn.close();
+				
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
+		
+	}
+
+
 	
 }

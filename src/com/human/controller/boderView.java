@@ -1,6 +1,7 @@
 package com.human.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -34,13 +35,16 @@ public class boderView extends HttpServlet {
 		// TODO Auto-generated method stub
 		//response.getWriter().append("Served at: ").append(request.getContextPath());
 		String wno=request.getParameter("wno");
-		System.out.println(wno+"wno확인용");
+		System.out.println(wno);
+		ArrayList<boardVO> clist=new ArrayList<>();
 		
+		clist=bdao.selectC(wno);
 		boardVO data=bdao.selectOne(wno);
 		
 		String url="bbs/view.jsp";
 		RequestDispatcher dispatcher=request.getRequestDispatcher(url);
 		request.setAttribute("board", data);
+		request.setAttribute("comment", clist);
 		dispatcher.forward(request, response);
 		
 	}

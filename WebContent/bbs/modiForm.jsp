@@ -10,36 +10,35 @@
 <body>
    <div id="wrap" align="center">
       <h1>질의응답 등록</h1>
-      <form id="join" name="frm" method="post" action="wrAction">
+      <form id="modi" name="frm" method="post" action="modiForm2">
          <input type="hidden" name="command" value="board_write">
          <table>
 			<tr>
                <th>글번호</th>
-               <td><% int num=(int)request.getAttribute("num"); 
-               out.print(num+1);   
-               %>
-               
+               <td>
+               	<input type="hidden" name="num" value="${modi.getNum()}">
+            	   ${modi.getNum()}
                </td>
             </tr>
             <tr>
                <th>작성자</th>
-               <td><input type="text" name="name">  비밀글 설정<input id="checkbox" type="checkbox" size="70" name=chkbox value="Y">  * 필수    </td>
+               <td><input type="text" name="name" value="${modi.getName()}">  비밀글 설정<input id="checkbox" type="checkbox" size="70" name=chkbox value="Y">  * 필수    </td>
             </tr>
            <tr>
                <th>ID</th>
-               <td><input type="text" size="70" name="id" id='id'><input type="button" id="idchk" value="아이디 확인">   * 필수</td>
+               <td><input type="text" size="70" value="${modi.getId()}" name="id" id='id'><input type="button" id="idchk" value="아이디 확인">   * 필수</td>
             </tr>
             <tr>
                <th>제목</th>
-               <td><input type="text" size="70" name="title"></td>
+               <td><input type="text" size="70" value="${modi.getTitle()}" name="title"></td>
             </tr>
             <tr>
                <th>비밀번호</th>
-               <td><input type="text" size="70" name="pass"> * 필수</td>
+               <td><input type="text" size="70" value="${modi.getPass()}" name="pass"> * 필수</td>
             </tr>            
             <tr>
                <th>내용</th>
-               <td><textarea cols="70" rows="15" name="content"></textarea></td>
+               <td><textarea cols="70" rows="15" name="content">${modi.getContent()}</textarea></td>
             </tr>
           
             
@@ -73,7 +72,7 @@
 		if(!chkId){
 			alert('아이디 확인을 진행해주세요');			
 		}else{
-			document.getElementById('join').submit();
+			document.getElementById('modi').submit();
 			alert('등록완료');			
 		}
 	}

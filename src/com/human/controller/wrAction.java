@@ -44,7 +44,7 @@ public class wrAction extends HttpServlet {
 		}else {
 			boardvo.setChkbox("Y");
 		}
-		
+		boardvo.setNum(boardDAO.wrnum()+1);
 		boardvo.setName(request.getParameter("name"));
 		boardvo.setId(request.getParameter("id"));
 		boardvo.setTitle(request.getParameter("title"));
@@ -53,13 +53,13 @@ public class wrAction extends HttpServlet {
 		
 		if(boardvo.getName()!=null && boardvo.getId()!=null && boardvo.getPass()!=null) {
 			boardDAO.insert(boardvo);
-			System.out.println("ì™„ë£Œ");
+			System.out.println("¿Ï·á");
 		}else {
-			System.out.println("ë‚´ìš© ì…ë ¥í•´");
+			System.out.println("ÇÊ¼öÇ×¸ñÀ» ÀÔ·ÂÇØÁÖ¼¼¿ä");
 		}
 		
 		
-		response.sendRedirect("boardList"); //redirect  boardListì„œë¸”ë¦¿ìœ¼ë¡œ ì´ë™í•œë‹¤.
+		response.sendRedirect("boardList"); //redirect  boardList¼­ºí¸´À¸·Î ÀÌµ¿ÇÑ´Ù.
 	}
 
 	/**
